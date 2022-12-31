@@ -4,10 +4,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { Button, Grid } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import { LOGIN_ROUTE } from '../utils/consts';
+import { useContext } from 'react';
+import { Context } from '../index';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 
 const Navbar = () => {
-    const user = false
+    const { auth } = useContext(Context)
+    const [user] = useAuthState(auth)
     return (
         <AppBar position="static">
             <Toolbar variant={'dense'}>
