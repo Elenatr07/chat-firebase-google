@@ -4,9 +4,12 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Context } from '../index';
 import { Container, Grid, Button, TextField, Avatar } from '@material-ui/core';
 import { useState } from 'react';
-import firebase from 'firebase';
+
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import Loader from './Loader';
+import firebase from 'firebase';
+
+
 
 
 const Chat = () => {
@@ -14,7 +17,7 @@ const Chat = () => {
     const [user] = useAuthState(auth)
     const [value, setValue] = useState('')
     const [messages, loading] = useCollectionData(
-        firestore.collection('messages').orderBy('createAt')
+        firestore.collection('messages').orderBy('createdAt')
     )
 
     const sendMessage = async () => {
@@ -23,7 +26,8 @@ const Chat = () => {
             displayName: user.displayName,
             photoURL: user.photoURL,
             text: value,
-            cteatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+
         })
         setValue('')
     }
@@ -35,17 +39,30 @@ const Chat = () => {
         <Container>
             <Grid container
                 justifyContent={'center'}
-                style={{ height: window.innerHeight - 50, marginTop: 20 }}>
+                style={{ height: window.innerHeight - 50, marginTop: 20 }}
+
+            >
                 <div style={{ width: '80%', height: '60vh', border: '1px solid #3f51b5', overflow: 'auto' }}>
                     {messages.map(message =>
-                        <div>
+                        <div style={{
+                            margin: 10,
+                            border: user.uid === message.uid ? '2px solid red' : '2px solid #3f51b5',
+                            marginLeft: user.uid === message.uid ? 'auto' : '10px',
+                            backgroundColor: user.uid === message.uid ? 'lightpink' : '#cfe8fc',
+                            width: 'fit-content',
+                            borderRadius: '25% 10%',
+                            padding: '5px'
+
+
+                        }}>
                             <Grid container>
                                 <Avatar src={message.photoURL} />
                                 <div>{message.displayName}</div>
 
                             </Grid>
-                            <div> {message.text}текст сообщения</div>
-                        </div>)}
+                            <div>{message.text}</div>
+                        </div>
+                    )}
                 </div>
                 <Grid
                     container
